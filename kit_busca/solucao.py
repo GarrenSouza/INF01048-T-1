@@ -1,5 +1,6 @@
-OBJETIVO = "12345678_"
+from queue import Queue
 
+OBJETIVO = "12345678_"
 
 def swap(estado, i1, i2):
     estado = list(estado)
@@ -91,7 +92,7 @@ def expande(nodo):
     :return:
     """
 
-    return [Nodo(estado, nodo, acao, nodo.getCusto() + 1) for acao, estado  in sucessor(nodo.estado)]
+    return [Nodo(estado, nodo, acao, nodo.getCusto() + 1) for acao, estado in sucessor(nodo.getEstado())]
 
 def retiraBFS(F):
     return (F[0], F[1:])
@@ -107,15 +108,21 @@ def bfs(estado):
     """
 
     X = {}
-    F = [Nodo(estado, None, None, 0)]
+    F = Queue()
+    F.put(Nodo(estado, None, None, 0))
+    #F = [Nodo(estado, None, None, 0)]
 
     while F:
-        v, F = retiraBFS(F)
+        #v, F = retiraBFS(F)
+        v = F.get()
         if v.getEstado() == OBJETIVO:
             return v.caminho()
         if v.getEstado() not in X:
             X[v.getEstado()] = v
-            F = F + expande(v)
+            exp = expande(v)
+            for e in exp:
+              F.put(e)
+            #F = F + expande(v)
     return None
 
 
@@ -157,4 +164,6 @@ def astar_manhattan(estado):
     # substituir a linha abaixo pelo seu codigo
     raise NotImplementedError
 
-len(bfs("2_3541687")) == 23
+print (len(bfs("1234567_8")) == 1)
+#print (len(bfs("123456_78")) == 2)
+print(len(bfs("2_3541687")) == 23)
