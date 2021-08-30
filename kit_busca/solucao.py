@@ -1,6 +1,5 @@
-import math
-import heapq as hpq
 from queue import Queue
+from queue import PriorityQueue
 
 _OBJETIVO = "12345678_"
 
@@ -10,25 +9,10 @@ def swap(estado, i1, i2):
     return ''.join(estado)
 
 class Nodo:
-
+    
     def __lt__(self, nodo):
         return self.get_custo() < nodo.get_custo()
-
-    def __le__(self, nodo):
-        return self.get_custo() <= nodo.get_custo()
-
-    def __gt__(self, nodo):
-        return self.get_custo() > nodo.get_custo()
-
-    def __ge__(self, nodo):
-        return self.get_custo() >= nodo.get_custo()
-
-    def __eq__(self, nodo):
-        return self.get_custo() == nodo.get_custo()
-
-    def __ne__(self, nodo):
-        return self.get_custo() != nodo.get_custo()
-
+    
     def __init__(self, estado, pai, acao, custo):
         self.estado = estado
         self.pai = pai
@@ -54,20 +38,6 @@ class Nodo:
             pai = pai.get_pai()
         return caminho
 
-    # def caminho(self):
-    # l = [self.estado]
-    # if(self.pai)
-    #     l.append(self.pai._caminho(l))
-    # return l
-
-    # def _caminho(self, l):
-    # l.append(self.estado)
-    # if !self.pai:
-    #     return l
-    # else :
-    #     pai._caminho(l)
-    #     return l
-
 def sucessor(estado):
     sucessores = []
     pos_vazio = estado.find('_')
@@ -89,66 +59,60 @@ def sucessor(estado):
 def expande(nodo):
     return [Nodo(estado, nodo, acao, nodo.get_custo() + 1) for acao, estado  in sucessor(nodo.estado)]
 
-def retira_BFS(F):
-    return (F[0], F[1:])
-
 def bfs(estado):
+    if not solucionavel(estado):
+        return None
     X = {}
     F = Queue()
     F.put(Nodo(estado, None, None, 0))
 
-    while F:
+    while not F.empty():
         v = F.get()
-        if v.getEstado() == _OBJETIVO:
+        if v.get_estado() == _OBJETIVO:
             return v.caminho()
-        if v.getEstado() not in X:
-            X[v.getEstado()] = v
+        if v.get_estado() not in X:
+            X[v.get_estado()] = v
             exp = expande(v)
             for e in exp:
               F.put(e)
     return None
 
-def retira_DFS(F):
-    return (F[-1], F[:-1])
-
 def dfs(estado):
+    if not solucionavel(estado):
+        return None
     X = {}
     F = [Nodo(estado, None, None, 0)]
 
-    while F:
-        [print(e.get_estado()) for e in X.values()]
-        input()
-        v, F = retira_DFS(F)
+    while len(F) != 0:
+        v = F.pop()
         if v.get_estado() == _OBJETIVO:
             return v.caminho()
         if v.get_estado() not in X:
             X[v.get_estado()] = v
-            F = F + expande(v)
+            exp = expande(v)
+            for e in exp:
+                F.append(e)
     return None
-
-def retira_astar(estado):
-    return hpq.heappop(estado)
 
 def get_hamming_distance(estado):
     return len([1 for i, e in enumerate(estado) if '12345678_'.find(e) != i])
 
-def expande_astar_hamming(F, nodo):
-    l = F + [Nodo(estado, nodo, acao, nodo.get_custo() + 1 + get_hamming_distance(estado)) for acao, estado  in sucessor(nodo.estado)]
-    hpq.heapify(l)
-    return l
-
 def astar_hamming(estado):
+    if not solucionavel(estado):
+        return None
     X = {}
-    F = [Nodo(estado, None, None, 0)]
+    F = PriorityQueue()
+    F.put((0, Nodo(estado, None, None, 0)))
 
-    while F:
-        v = retira_astar(F)
+    while not F.empty():
+        v = F.get()[1]  # acessa o segundo elemento da tupla com menor custo
         if v.get_estado() == _OBJETIVO:
             return v.caminho()
         if v.get_estado() not in X:
             X[v.get_estado()] = v
-            F = expande_astar_hamming(F, v)
-
+            exp = expande(v)
+            for e in exp:
+                F.put((e.get_custo() + get_hamming_distance(e.get_estado()), e))
     return None
 
 def get_manhattan_distance(estado):
@@ -159,26 +123,37 @@ def get_manhattan_distance(estado):
       i_real = _OBJETIVO.find(e)
       x_real = i_real%3
       y_real = int(i_real/3)
-      distancia = distancia + math.sqrt((x - x_real)**2 + (y - y_real)**2)
+      distancia = distancia + abs(x - x_real) + abs(y - y_real)
   return distancia
 
-def expande_astar_manhattan(F, nodo):
-    l = F + [Nodo(estado, nodo, acao, nodo.get_custo() + 1 + get_manhattan_distance(estado)) for acao, estado  in sucessor(nodo.estado)]
-    hpq.heapify(l)
-    return l
-    
 def astar_manhattan(estado):
+    if not solucionavel(estado):
+        return None
     X = {}
-    F = [Nodo(estado, None, None, 0)]
+    F = PriorityQueue()
+    F.put((0, Nodo(estado, None, None, 0))) # cria um tupla custo - nodo
 
-    while F:
-        v = retira_astar(F)
+    while not F.empty():
+        v = F.get()[1]  # acessa o segundo elemento da tupla com menor custo
         if v.get_estado() == _OBJETIVO:
             return v.caminho()
         if v.get_estado() not in X:
             X[v.get_estado()] = v
-            F = expande_astar_manhattan(F, v)
-
+            exp = expande(v)
+            for e in exp:
+                F.put((e.get_custo() + get_manhattan_distance(e.get_estado()), e))
     return None
 
-print(len(astar_manhattan("2_3541687")) == 23)
+def solucionavel(estado):
+  pos_vazio = estado.find('_')
+  s = list(estado)
+  s = s[:pos_vazio] + s[pos_vazio + 1:]
+  inversoes = 0
+  for i, num in enumerate(s):
+    for num_precedente in s[:i]:
+      if num_precedente < num:
+        inversoes = inversoes + 1
+  if inversoes%2 == 0:
+    return True
+  else:
+    return False
