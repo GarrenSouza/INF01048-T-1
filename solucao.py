@@ -1,7 +1,9 @@
 from queue import Queue
 from queue import PriorityQueue
+import time
 
 _OBJETIVO = "12345678_"
+expandidos = 0
 
 def swap(estado, i1, i2):
     estado = list(estado)
@@ -57,6 +59,8 @@ def sucessor(estado):
     return sucessores
 
 def expande(nodo):
+    global expandidos
+    expandidos = expandidos + 1
     return [Nodo(estado, nodo, acao, nodo.get_custo() + 1) for acao, estado  in sucessor(nodo.estado)]
 
 def bfs(estado):
@@ -69,6 +73,7 @@ def bfs(estado):
     while not F.empty():
         v = F.get()
         if v.get_estado() == _OBJETIVO:
+            print (f'BFS: custo - {v.get_custo()}')
             return v.caminho()
         if v.get_estado() not in X:
             X[v.get_estado()] = v
@@ -86,6 +91,7 @@ def dfs(estado):
     while len(F) != 0:
         v = F.pop()
         if v.get_estado() == _OBJETIVO:
+            print (f'DFS: custo - {v.get_custo()}')
             return v.caminho()
         if v.get_estado() not in X:
             X[v.get_estado()] = v
@@ -107,6 +113,7 @@ def astar_hamming(estado):
     while not F.empty():
         v = F.get()[1]  # acessa o segundo elemento da tupla com menor custo
         if v.get_estado() == _OBJETIVO:
+            print (f'hamming: custo - {v.get_custo()}')
             return v.caminho()
         if v.get_estado() not in X:
             X[v.get_estado()] = v
@@ -136,6 +143,7 @@ def astar_manhattan(estado):
     while not F.empty():
         v = F.get()[1]  # acessa o segundo elemento da tupla com menor custo
         if v.get_estado() == _OBJETIVO:
+            print (f'manhattan: custo - {v.get_custo()}')
             return v.caminho()
         if v.get_estado() not in X:
             X[v.get_estado()] = v
@@ -157,3 +165,44 @@ def solucionavel(estado):
     return True
   else:
     return False
+
+def executa_buscas():
+    global expandidos
+    
+    start = time.time()
+    bfs("2_3541687")
+    end = time.time()
+    time_bfs = end - start
+    expandidos_bfs = expandidos
+    expandidos = 0
+
+    start = time.time()
+    dfs("2_3541687")
+    end = time.time()
+    time_dfs = end - start
+    expandidos_dfs = expandidos
+    expandidos = 0
+
+    start = time.time()
+    astar_hamming("2_3541687")
+    end = time.time()
+    time_hamming = end - start
+    expandidos_hamming = expandidos
+    expandidos = 0
+
+    start = time.time()
+    astar_manhattan("2_3541687")
+    end = time.time()
+    time_manhattan = end - start
+    expandidos_manhattan = expandidos
+    expandidos = 0
+
+    print (f'BFS: tempo -  {time_bfs} \n + nos expandidos - {expandidos_bfs}')
+   
+    print (f'DFS: tempo - {time_dfs} \n + nos expandidos - {expandidos_dfs}')
+    
+    print (f'Hamming: tempo - {time_hamming} \n + nos expandidos - {expandidos_hamming}')
+    
+    print (f'manhattan: tempo - {time_manhattan} \n nos expandidos - {expandidos_manhattan}')
+
+executa_buscas()
