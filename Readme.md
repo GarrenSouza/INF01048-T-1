@@ -1,5 +1,4 @@
 # Componentes do Grupo
-
 | Nome | Matrícula | Turma |
 | ---- | --------- | ----- |
 | Garrenlus de Souza         | 00315521 | Turma A |
