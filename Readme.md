@@ -5,7 +5,7 @@
 | Júlia Pelayo Rodrigues     | 00315868 | Turma A |
 | Leonardo Rodrigues Pedroso | 00265001 | Turma A |
 
-# Estatística
+# Estatísticas
 | Algoritmo | Métrica | Valor |
 | --------- | ------- | ------|
 | BFS       |  Custo  | 23
