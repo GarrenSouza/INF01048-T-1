@@ -20,3 +20,8 @@
 | Manhattan |  Custo  | 23
 | | Nós expandidos    | 2013
 | | Tempo (segundos)  | 0.1027534008026123
+
+# E se não tiver solução?
+A função ''solucionavel'' foi criada à partir das informações encontradas em:
+https://math.stackexchange.com/questions/293527/how-to-check-if-a-8-puzzle-is-solvable
+mais precisamente na resposta de Tushar Vaghela
