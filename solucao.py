@@ -33,10 +33,11 @@ class Nodo:
         return self.acao
 
     def caminho(self):
-        caminho = []
+        caminho = [self.get_acao()]
         pai = self.get_pai()
         while pai:
-            caminho.insert(0, pai.get_acao())
+            if pai.get_acao() is not None:
+                caminho.insert(0, pai.get_acao())
             pai = pai.get_pai()
         return caminho
 

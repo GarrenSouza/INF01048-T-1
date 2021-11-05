@@ -12,7 +12,7 @@
 | | Nós expandidos    | 101425
 | | Tempo (segundos)  | 1.9317717552185059    
 | DFS       |  Custo  | 68539
-| | Nós expandidos    | 68539
+| | Nós expandidos    | 71399
 | | Tempo (segundos)  | 1.6435742378234863    
 | Hamming   |  Custo  | 23
 | | Nós expandidos    | 14093
